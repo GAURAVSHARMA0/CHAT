@@ -11,26 +11,35 @@ const wsServer = new webSocketServer({
 // I'm maintaining all active connections in this object
 const clients = {};
 
-// This code generates unique userid for everyuser.
-const getUniqueID = () => {
-  const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-  return s4() + s4() + '-' + s4();
-};
 
 wsServer.on('request', function(request) {
-  var userID = getUniqueID();
-  console.log((new Date()) + ' Recieved a new connection from origin ' + request.origin + '.');
+  var userID = request.resourceURL.query.USERID;
+  console.log( 'Recieved a new connection of '+request.resourceURL.query.USERID);
   // You can rewrite this part of the code to accept only the requests from allowed origin
   const connection = request.accept(null, request.origin);
   clients[userID] = connection;
+  //SEND ACTIVE USER LIST
+  const PACKET = {};
+  PACKET.type = "USERLIST";
+  PACKET.users = Object.keys(clients);
+  clients[userID].sendUTF(JSON.stringify(PACKET));
+
+
     connection.on('message', function(message) {
-      console.log('Active client : ',Object.keys(clients).length);
+
         if (message.type === 'utf8') {
             console.log('Received Message: ' + message.utf8Data);
-
-            Object.values(clients).forEach(conn => {
-              conn.sendUTF(message.utf8Data);
-              });
+            const { userid , msg, to } = JSON.parse(message.utf8Data);
+            const PACKET = {};
+            PACKET.type = "MSG";
+            PACKET.msg = `USER Not Available`;
+            if(clients[to]){
+              PACKET.msg = msg;
+              clients[to].sendUTF(JSON.stringify(PACKET));
+            }
+            else{
+              clients[userid].sendUTF(JSON.stringify(PACKET));
+            }
             // connection.sendUTF(message.utf8Data);
         }
         else if (message.type === 'binary') {

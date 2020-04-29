@@ -1,40 +1,61 @@
 import React, { Component } from 'react';
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import Login from './signin';
-const client = new W3CWebSocket('ws://10.42.0.198:8000');
 
 class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      text : ""
+      text : "",
+      recipient : "",
+      userList : []
     }
 
   }
-  componentWillMount() {
-    client.onopen = () => {
+  componentDidMount() {  
+    this.client = new W3CWebSocket(`ws://${process.env.REACT_APP_SERVER}?USERID=${process.env.REACT_APP_USERID}&USER=${process.env.REACT_APP_USER}`);
+    this.client.onopen = () => {
       console.log('WebSocket Client Connected');
     };
-    client.onmessage = (message) => {
-      console.log(JSON.parse(message.data));
+    this.client.onmessage = (message) => {
+        const msgData = JSON.parse(message.data);
+        const { type } = msgData;
+        if(type === "USERLIST"){
+          this.setState({userList : msgData.users});
+        }
+        else{
+          console.log(msgData);
+        }
     };
+    this.client.onerror = (err) =>{
+      console.log('ONERROR ',err);
+    }
+    console.log('process',process.env)
   }
   handleChange = (e) => {
-    this.setState({text: e.target.value});
+    this.setState({[e.target.name]: e.target.value});
   }
   handleSend = () =>{
     if(this.state.text){
-      client.send(JSON.stringify({
-        msg: this.state.text,
-        type: "message user"
-      }));
+  
+      this.client.send(JSON.stringify({
+          msg: this.state.text,
+          userid: process.env.REACT_APP_USERID,
+          to:this.state.recipient,
+        }));
+
       this.setState({text: ""});
     }
   }
   render() {
     return (
       <div>
-        <input type="text" value={this.state.text} onChange={this.handleChange} />
+        <h6> SERVER: {process.env.REACT_APP_SERVER}</h6>
+        <label>To : </label>
+        <input type="text" name="recipient" value={this.state.recipient} onChange={this.handleChange} />
+        <label>Message</label>
+        <input type="text" name="text" value={this.state.text} onChange={this.handleChange} />
+       
         <button onClick={this.handleSend}>Send Message</button>
         <Login />
       </div>
