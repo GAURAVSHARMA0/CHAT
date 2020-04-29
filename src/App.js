@@ -7,17 +7,26 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      text : ""
+      text : "",
+      recipient : "",
+      userList : []
     }
 
   }
   componentDidMount() {  
-    this.client = new W3CWebSocket(`ws://${process.env.REACT_APP_SERVER}`);
+    this.client = new W3CWebSocket(`ws://${process.env.REACT_APP_SERVER}?USERID=${process.env.REACT_APP_USERID}&USER=${process.env.REACT_APP_USER}`);
     this.client.onopen = () => {
       console.log('WebSocket Client Connected');
     };
     this.client.onmessage = (message) => {
-      console.log(JSON.parse(message.data));
+        const msgData = JSON.parse(message.data);
+        const { type } = msgData;
+        if(type === "USERLIST"){
+          this.setState({userList : msgData.users});
+        }
+        else{
+          console.log(msgData);
+        }
     };
     this.client.onerror = (err) =>{
       console.log('ONERROR ',err);
@@ -25,15 +34,15 @@ class App extends Component {
     console.log('process',process.env)
   }
   handleChange = (e) => {
-    this.setState({text: e.target.value});
+    this.setState({[e.target.name]: e.target.value});
   }
   handleSend = () =>{
     if(this.state.text){
   
       this.client.send(JSON.stringify({
           msg: this.state.text,
-          user: process.env.REACT_APP_USER,
-          userid: process.env.REACT_APP_USERID
+          userid: process.env.REACT_APP_USERID,
+          to:this.state.recipient,
         }));
 
       this.setState({text: ""});
@@ -43,7 +52,11 @@ class App extends Component {
     return (
       <div>
         <h6> SERVER: {process.env.REACT_APP_SERVER}</h6>
-        <input type="text" value={this.state.text} onChange={this.handleChange} />
+        <label>To : </label>
+        <input type="text" name="recipient" value={this.state.recipient} onChange={this.handleChange} />
+        <label>Message</label>
+        <input type="text" name="text" value={this.state.text} onChange={this.handleChange} />
+       
         <button onClick={this.handleSend}>Send Message</button>
       </div>
      
