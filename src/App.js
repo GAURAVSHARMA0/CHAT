@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { w3cwebsocket as W3CWebSocket } from "websocket";
-
-const client = new W3CWebSocket('ws://192.168.101.12:8000');
+import Login from './signin';
+const client = new W3CWebSocket('ws://10.42.0.198:8000');
 
 class App extends Component {
   constructor(props){
@@ -36,6 +36,7 @@ class App extends Component {
       <div>
         <input type="text" value={this.state.text} onChange={this.handleChange} />
         <button onClick={this.handleSend}>Send Message</button>
+        <Login />
       </div>
      
     );
