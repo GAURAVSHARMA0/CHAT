@@ -51,6 +51,11 @@ class App extends Component {
     return (
       <div>
         <h6> SERVER: {process.env.REACT_APP_SERVER}</h6>
+        <ul>
+          {this.state.userList.length && this.state.userList.map((user, index) => (
+            <li key={index}>{user}</li>
+          ))}
+        </ul>
         <label>To : </label>
         <input type="text" name="recipient" value={this.state.recipient} onChange={this.handleChange} />
         <label>Message</label>
