@@ -22,8 +22,9 @@ wsServer.on('request', function(request) {
   const PACKET = {};
   PACKET.type = "USERLIST";
   PACKET.users = Object.keys(clients);
-  clients[userID].sendUTF(JSON.stringify(PACKET));
-
+  Object.values(clients).forEach(conn => {
+    conn.sendUTF(JSON.stringify(PACKET));
+  });
 
     connection.on('message', function(message) {
 
