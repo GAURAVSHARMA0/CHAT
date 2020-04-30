@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import Login from './Login';
-
+import CHAT from './ChatWindow/Chat';
 class App extends Component {
   constructor(props){
     super(props);
@@ -35,13 +35,12 @@ class App extends Component {
   handleChange = (e) => {
     this.setState({[e.target.name]: e.target.value});
   }
-  handleSend = () =>{
-    if(this.state.text){
-  
+  handleSend = (text, id) =>{
+    if(text){
       this.client.send(JSON.stringify({
-          msg: this.state.text,
+          msg: text,
           userid: process.env.REACT_APP_USERID,
-          to:this.state.recipient,
+          to: id,
         }));
 
       this.setState({text: ""});
@@ -50,19 +49,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <h6> SERVER: {process.env.REACT_APP_SERVER}</h6>
-        <ul>
-          {this.state.userList.length && this.state.userList.map((user, index) => (
-            <li key={index}>{user}</li>
-          ))}
-        </ul>
-        <label>To : </label>
-        <input type="text" name="recipient" value={this.state.recipient} onChange={this.handleChange} />
-        <label>Message</label>
-        <input type="text" name="text" value={this.state.text} onChange={this.handleChange} />
-       
-        <button onClick={this.handleSend}>Send Message</button>
-        <Login />
+        <CHAT user={this.state.userList} sendMsg={this.handleSend} />
       </div>
      
     );

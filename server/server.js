@@ -10,16 +10,14 @@ const wsServer = new webSocketServer({
 
 // I'm maintaining all active connections in this object
 const clients = {};
-function remove(arr) {
-  var what, a = arguments, L = a.length, ax;
-  while (L > 1 && arr.length) {
-      what = a[--L];
-      while ((ax= arr.indexOf(what)) !== -1) {
-          arr.splice(ax, 1);
-      }
-  }
-  return arr;
+
+const remove = (arr, key) =>{
+  let arrCopy = Array.from(arr);
+  let keyIndex = arrCopy.findIndex(e => e === key);
+  arrCopy.splice(keyIndex,1);
+  return arrCopy;
 }
+
 
 wsServer.on('request', function(request) {
   var userID = request.resourceURL.query.USERID;
@@ -31,19 +29,12 @@ wsServer.on('request', function(request) {
   const PACKET = {};
   PACKET.type = "USERLIST";
   clientArr= Object.keys(clients);
-  //PACKET.users = Object.keys(clients);
-  // Object.values(clients).forEach(conn => {
-  //   conn.sendUTF(JSON.stringify(PACKET));
-  // });
-  
-  
+
   for(key in clients){
     let arr = clientArr;
-    remove(arr,key);
-    PACKET.users = arr;
+    PACKET.users = remove(arr,key);
     conn = clients[key];
-    conn.sendUTF(JSON.stringify(PACKET));
-    
+    conn.sendUTF(JSON.stringify(PACKET)); 
   }
 
     connection.on('message', function(message) {
