@@ -70,6 +70,7 @@ import ShopIcon from '@material-ui/icons/Shop';
 import SortIcon from "@material-ui/icons/Sort";
 import StoriesIcon from "@material-ui/icons/LibraryBooks";
 import SupportIcon from "@material-ui/icons/ContactSupport";
+import TelegramIcon from '@material-ui/icons/Telegram';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import TrainingIcon from '@material-ui/icons/School';
 import TwitterIcon from '@material-ui/icons/Twitter';
@@ -152,6 +153,7 @@ export {
     SortIcon,
     StoriesIcon,
     SupportIcon,
+    TelegramIcon,
     ThumbUpAltIcon,
     TwitterIcon,
     TrainingIcon,

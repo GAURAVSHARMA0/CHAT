@@ -17,7 +17,7 @@ function Copyright() {
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="https://material-ui.com/">
-        Wiser
+        Haye - Live Chat
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -38,7 +38,7 @@ const useStyles = theme => ({
     backgroundPosition: 'center',
   },
   paper: {
-    margin: theme.spacing(2, 4),
+    margin: theme.spacing(6, 4),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -103,7 +103,7 @@ class Login extends React.Component {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Welcome on wiser
+              Welcome on Haye
             </Typography>
             <form className={classes.form} noValidate>
               <TextField
@@ -114,6 +114,8 @@ class Login extends React.Component {
                 value={this.state.userId}
                 onChange={this.handleChange}
                 id="text"
+                placeholder="Enter Your userId"
+                color="secondary"
                 label="UserID"
                 name="userId"
                 autoFocus
@@ -129,13 +131,15 @@ class Login extends React.Component {
                 label="Password"
                 type="password"
                 id="password"
+                placeholder="Enter Your password"
+                color="secondary"
                 autoComplete="current-password"
               />
               <Button
                 fullWidth
                 variant="contained"
                 onClick={this.loginHandle}
-                color="primary"
+                color="secondary"
                 className={classes.submit}
               >
                 Login

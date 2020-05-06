@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { w3cwebsocket as W3CWebSocket } from "websocket";
-import Login from './Login';
+
 import CHAT from './ChatWindow/Chat';
 class App extends Component {
   constructor(props){
@@ -39,7 +39,7 @@ class App extends Component {
     if(text){
       this.client.send(JSON.stringify({
           msg: text,
-          from: process.env.REACT_APP_USERID,
+          from: this.props.data.userId,
           to: id,
         }));
 
@@ -48,10 +48,7 @@ class App extends Component {
   }
   render() {
     return (
-      <div>
         <CHAT user={this.state.userList} sendMsg={this.handleSend} />
-      </div>
-     
     );
   }
 }

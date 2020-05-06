@@ -19,7 +19,7 @@ import Icon from '@material-ui/core/Icon';
 
 const styles = makeStyles(theme => ({
     InfoIcon:{
-        color : "#00bcd4"
+        color : "#9a7afd"
       },
       content:{
         textAlign: "center",

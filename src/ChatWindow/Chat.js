@@ -4,8 +4,8 @@ import NoDataBuilder from './NoData';
 //Material UI
 import {withStyles,fade, Grid, Card, CardHeader, CardContent, List, ListItem, ListItemAvatar, Avatar, ListItemText, Typography,Divider,Paper,InputBase,IconButton} from "../theme/muiComponents";
 //Icons Material UI
-import { SendIcon, SearchIcon, ClearIcon} from "../theme/muiIcons";
-
+import { SendIcon, SearchIcon, ClearIcon, TelegramIcon} from "../theme/muiIcons";
+import AppBarBuilder from './AppBarBuilder';
 //CSS Styles
 const styles = theme => ({
     root: {
@@ -70,7 +70,7 @@ const styles = theme => ({
 
     },
     gridContainer:{
-      maxWidth: "1050px",
+      Width: "100%",
       backgroundColor : "white",
       border: "1px solid lightgrey",
       minHeight: "470.835px"
@@ -161,7 +161,7 @@ const styles = theme => ({
     search: {
       position: 'relative',
       borderRadius: "16px",
-      color: "#f32958",
+      color: "#9a7afd",
       backgroundColor: fade('#c1c1c1', 0.15),
       '&:hover': {
         backgroundColor: fade('#c1c1c1', 0.25),
@@ -247,14 +247,12 @@ class CHAT extends Component {
   render() {
     const { classes } = this.props;
     const filteredData = this.props.user.filter(item =>{
-    const serachBase = item; // for make serach on which basis
+        const serachBase = item; // for make serach on which basis
         return serachBase.toLowerCase().includes(this.state.searchText.toLowerCase());
     });
-    const listData = filteredData.map((chatObj, index) => {
-        
-         let AvatarData = <Avatar>{chatObj.toString().charAt(0)}</Avatar>;
-  
-          return (<React.Fragment key={index}>
+    const listData = filteredData.map((chatObj, index) => { 
+        let AvatarData = <Avatar>{chatObj.toString().charAt(0)}</Avatar>;
+        return (<React.Fragment key={index}>
             <ListItem alignItems="flex-start" onClick={() => this.handleSelected(chatObj)} button>
             <ListItemAvatar>
               {AvatarData}
@@ -283,9 +281,15 @@ class CHAT extends Component {
             />
             </ListItem>
             <Divider variant="fullWidth" component="li"/>
-        </React.Fragment>)
+        </React.Fragment>
+        );
     });
-    return (
+    return (<>
+            <AppBarBuilder
+              IS_LOADING={this.props.processing}
+              headerTitle={"Haye"} 
+              headerIcon={TelegramIcon}
+            />
             <Grid 
             container 
             direction="row"
@@ -320,10 +324,16 @@ class CHAT extends Component {
                         {listData}
                         </List>
                         <NoDataBuilder
-                        isRendor={(filteredData.length === 0)}
-                        title={"No Results Found"}
+                        isRendor={(!this.props.user.length === 0 && filteredData.length === 0)}
+                        title={"No Matching Contact Found"}
                         description={""}
                         type={"search"}
+                        />
+                        <NoDataBuilder
+                        isRendor={(this.props.user.length === 0 && filteredData.length === 0)}
+                        title={"Currently no users active"}
+                        description={""}
+                        type={"info"}
                         />
                     </CardContent>
                     </Card>
@@ -355,13 +365,13 @@ class CHAT extends Component {
             :
             <NoDataBuilder
             isRendor={!(this.state.selectedId)}
-            title={"No Contact Selected"}
+            title={this.props.user.length ? "No Contact Selected" : "Currently no users active."}
             description={""}
             type={"intial"}
             />}
             </Grid>
             </Grid>
-    );
+            </>);
   }
 }
 

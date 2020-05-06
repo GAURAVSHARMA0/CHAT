@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import muiTheme from "./theme/muiTheme";
+import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
 import App from './App';
 import Login from './Login';
+import './index.css';
 import {
   BrowserRouter as Router,
-  Switch,
   Route,
-  Link
 } from "react-router-dom";
 class Routing extends React.Component{
   constructor(props)
@@ -29,14 +29,14 @@ class Routing extends React.Component{
   render(){
     return(
       <Router>
-        <Switch>
+        <MuiThemeProvider theme={muiTheme}>
           <Route exact path="/">
           {(this.state.loggedIn && this.state.user !== null) ?
           <App loginHandler={this.setLoggedIn} data={this.state.user} />
           : 
           <Login loginHandler={this.setLoggedIn} />}
           </Route>
-        </Switch>
+          </MuiThemeProvider>
       </Router>
     );
   }
