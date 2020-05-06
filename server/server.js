@@ -29,7 +29,6 @@ wsServer.on('request', function(request) {
   const PACKET = {};
   PACKET.type = "USERLIST";
   clientArr= Object.keys(clients);
-
   for(key in clients){
     let arr = clientArr;
     PACKET.users = remove(arr,key);
@@ -60,7 +59,19 @@ wsServer.on('request', function(request) {
         }
     });
     connection.on('close', function(reasonCode, description) {
-        console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+        console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.'+ userID);
+        //Delete Connection
+        delete clients[userID];
+        const PACKET = {};
+        PACKET.type = "USERLIST";
+        clientArr= Object.keys(clients);
+        for(key in clients){
+          let arr = clientArr;
+          PACKET.users = remove(arr,key);
+          conn = clients[key];
+          conn.sendUTF(JSON.stringify(PACKET)); 
+        }
+
     });
 
   console.log('connected: ' + userID + ' in ' + Object.getOwnPropertyNames(clients))

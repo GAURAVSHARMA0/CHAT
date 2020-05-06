@@ -354,10 +354,10 @@ class CHAT extends Component {
             </>
             :
             <NoDataBuilder
-            isRendor={(filteredData.length === 0)}
-            title={"No Results Found"}
+            isRendor={!(this.state.selectedId)}
+            title={"No Contact Selected"}
             description={""}
-            type={"search"}
+            type={"intial"}
             />}
             </Grid>
             </Grid>

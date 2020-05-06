@@ -13,7 +13,7 @@ class App extends Component {
 
   }
   componentDidMount() {  
-    this.client = new W3CWebSocket(`ws://${process.env.REACT_APP_SERVER}?USERID=${process.env.REACT_APP_USERID}&USER=${process.env.REACT_APP_USER}`);
+    this.client = new W3CWebSocket(`ws://${process.env.REACT_APP_SERVER}?USERID=${this.props.data.userId}&USER=${this.props.data.name}`);
     this.client.onopen = () => {
       console.log('WebSocket Client Connected');
     };
@@ -39,7 +39,7 @@ class App extends Component {
     if(text){
       this.client.send(JSON.stringify({
           msg: text,
-          userid: process.env.REACT_APP_USERID,
+          from: process.env.REACT_APP_USERID,
           to: id,
         }));
 
